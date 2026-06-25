@@ -1,12 +1,8 @@
-from dataclasses import dataclass
 from pydantic import BaseModel
 
-class Player:
-    def __init__(self, username:str, rank: int, test_param:int = 0):
-        self.username = username
-        self.rank = rank
-        self.test_param = test_param
-
+class PlayerSearchData(BaseModel):
+    username : str
+    
 class PlayerInputData(BaseModel):
     username : str
     rank: int
