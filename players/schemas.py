@@ -3,12 +3,30 @@ from pydantic import BaseModel
 class PlayerSearchData(BaseModel):
     username : str
     
-class PlayerInputData(BaseModel):
+class PlayerCreateRequest(BaseModel):
     username : str
-    rank: int
-    test_param: int
+    password: str
+    email : str
 
 class PlayerUpdateData(BaseModel):
-    username: str
     rank: int | None = None
-    test_param: int | None = None
+
+class PlayerResponseModel(BaseModel):
+    id: int
+    username: str
+    email: str | None = None
+    rank: int
+    wins: int
+    loses: int
+
+class PlayerModel(BaseModel):
+    id: int
+    username: str
+    email: str | None = None
+    rank: int
+    wins: int
+    loses: int
+    hashed_password: str
+
+    class Config:
+        orm_mode = True
