@@ -18,15 +18,3 @@ class PlayerResponseModel(BaseModel):
     rank: int
     wins: int
     loses: int
-
-class PlayerModel(BaseModel):
-    id: int
-    username: str
-    email: str | None = None
-    rank: int
-    wins: int
-    loses: int
-    hashed_password: str
-
-    class Config:
-        orm_mode = True

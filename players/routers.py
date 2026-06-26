@@ -3,7 +3,7 @@ from players.schemas import PlayerCreateRequest, PlayerUpdateData, PlayerRespons
 from core.database import DbSession, get_db
 from players import services
 from sqlalchemy.orm import Session
-
+from auth.dependencies import CurrentPlayer
 
 router = APIRouter(
     prefix="/players",
@@ -11,7 +11,7 @@ router = APIRouter(
 )
 
 @router.get("/", status_code=status.HTTP_200_OK, response_model=list[PlayerResponseModel])
-async def get_all_players(sort_by: str = Query(default="rank"), db: Session = Depends(get_db)):
+async def get_all_players( db: DbSession, current_player: CurrentPlayer, sort_by: str = Query(default="rank")):
     return services.get_all_players(db)
 
 @router.post("/create", status_code=status.HTTP_201_CREATED, response_model=PlayerResponseModel)
