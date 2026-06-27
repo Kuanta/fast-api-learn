@@ -1,20 +1,21 @@
 from pydantic import BaseModel
 
+# schema to search player
 class PlayerSearchData(BaseModel):
-    username : str
+    profile_name : str | None = None
+    account_id : str | None = None
+    game_id : str | None = None
     
 class PlayerCreateRequest(BaseModel):
-    username : str
-    password: str
-    email : str
+    game_id : str
+    profile_name : str | None = None # If none, profile name will be account id
 
 class PlayerUpdateData(BaseModel):
     rank: int | None = None
+    profile_name : str | None = None
 
 class PlayerResponseModel(BaseModel):
-    id: int
-    username: str
-    email: str | None = None
+    account_id : str
+    game_id : str
+    profile_name : str
     rank: int
-    wins: int
-    loses: int

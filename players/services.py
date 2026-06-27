@@ -2,46 +2,52 @@ from sqlalchemy import func
 from sqlalchemy.orm import Session
 from players.models import PlayerModel
 from players.schemas import *
-from auth.utils import hash_password
 
+def get_all_profiles(game_id:str, db: Session):
+    return db.query(PlayerModel).filter(PlayerModel.game_id == game_id).all()
 
-def get_all_players(db: Session):
-    return db.query(PlayerModel).all()
+def get_all_account_profiles(account_id:str, db: Session):
+    return db.query(PlayerModel).filter(PlayerModel.account_id == account_id).all()
 
-def get_player_by_username(db: Session, username: str):
-    return db.query(PlayerModel).filter(func.lower(PlayerModel.username) == username.lower()).first()
+def get_game_profile(game_id:str, account_id:str, db: Session):
+    '''
+    Gets game profile for given game_id and account_id
+    '''
+    return db.query(PlayerModel).filter(PlayerModel.game_id == game_id, PlayerModel.account_id == account_id).first()
 
-def create_player(db: Session, player_data: PlayerCreateRequest):
+def create_profile(profile_data: PlayerCreateRequest, account_id:str, db: Session):
 
     #Check existing player
-    existing_player = get_player_by_username(db, player_data.username)
+    existing_player = get_game_profile(profile_data.game_id, account_id, db)
     if existing_player is not None:
         return None
     
     new_player = PlayerModel()
-    #hash password
-    new_player.username = player_data.username
-    new_player.hashed_password = hash_password(player_data.password)
-    new_player.email = player_data.email
+    new_player.account_id = account_id
+    new_player.game_id = profile_data.game_id
+    new_player.profile_name = profile_data.profile_name
+    new_player.elo = 0
     
     db.add(new_player)
     db.commit()
     db.refresh(new_player)
     return new_player
 
-def update_player(db: Session, username:str, player_data: PlayerUpdateData):
-    player = get_player_by_username(db, username)
+def update_profile(account_id: str, game_id: str, player_data: PlayerUpdateData, db: Session):
+    player = get_game_profile(game_id, account_id, db)
     if player is not None:
         if player_data.rank is not None:
             player.rank = player_data.rank
+        if player_data.profile_name is not None:
+            player.profile_name = player_data.profile_name
         db.commit()
         db.refresh(player)
         return player
     else:
         return None
     
-def delete_player(db: Session, username: str):
-    player = get_player_by_username(db, username)
+def delete_profile(account_id: str, game_id: str, db: Session):
+    player = get_game_profile(game_id, account_id, db)
     if player is not None:
         db.delete(player)
         db.commit()
