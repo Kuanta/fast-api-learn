@@ -15,7 +15,7 @@ def get_game_profile(game_id:str, account_id:str, db: Session):
     '''
     return db.query(PlayerModel).filter(PlayerModel.game_id == game_id, PlayerModel.account_id == account_id).first()
 
-def create_profile(profile_data: PlayerCreateRequest, account_id:str, db: Session):
+def create_profile(profile_data: PlayerCreateRequest, account_id:int, db: Session):
 
     #Check existing player
     existing_player = get_game_profile(profile_data.game_id, account_id, db)
@@ -25,7 +25,7 @@ def create_profile(profile_data: PlayerCreateRequest, account_id:str, db: Sessio
     new_player = PlayerModel()
     new_player.account_id = account_id
     new_player.game_id = profile_data.game_id
-    new_player.profile_name = profile_data.profile_name
+    new_player.profile_name = profile_data.profile_name if profile_data.profile_name is not None else account_id
     new_player.elo = 0
     
     db.add(new_player)
@@ -33,11 +33,11 @@ def create_profile(profile_data: PlayerCreateRequest, account_id:str, db: Sessio
     db.refresh(new_player)
     return new_player
 
-def update_profile(account_id: str, game_id: str, player_data: PlayerUpdateData, db: Session):
+def update_profile(account_id: int, game_id: int, player_data: PlayerUpdateData, db: Session) -> PlayerModel | None:
     player = get_game_profile(game_id, account_id, db)
     if player is not None:
-        if player_data.rank is not None:
-            player.rank = player_data.rank
+        if player_data.elo is not None:
+            player.elo = player_data.elo
         if player_data.profile_name is not None:
             player.profile_name = player_data.profile_name
         db.commit()
@@ -46,11 +46,11 @@ def update_profile(account_id: str, game_id: str, player_data: PlayerUpdateData,
     else:
         return None
     
-def delete_profile(account_id: str, game_id: str, db: Session):
+def delete_profile(account_id: str, game_id: str, db: Session) -> PlayerModel | None:
     player = get_game_profile(game_id, account_id, db)
     if player is not None:
         db.delete(player)
         db.commit()
-        return True
+        return player
     else:
-        return False
+        return None
