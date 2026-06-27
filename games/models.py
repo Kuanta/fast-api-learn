@@ -7,7 +7,9 @@ class GameModel(Base):
     __tablename__ = "games"
 
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, unique=True, index=True, nullable=False)
+    game_code = Column(String, unique=True, index=True, nullable=False)
+    game_name = Column(String, index=True, nullable=False)
+    game_description = Column(String, nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
 
     # Bir oyun -> birden çok oyuncu profili ve maç
