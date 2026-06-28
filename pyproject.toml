@@ -8,6 +8,7 @@ dependencies = [
     "bcrypt==4.0.1",
     "fastapi[standard]>=0.138.0",
     "passlib[bcrytp]>=1.7.4",
+    "pydantic-settings>=2.14.2",
     "pyjwt>=2.13.0",
     "sqlalchemy>=2.0.51",
 ]
