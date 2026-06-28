@@ -5,6 +5,10 @@ from auth.utils import hash_password
 from core.config import settings
 import argparse
 
+# Tüm modelleri SQLAlchemy registry'sine kaydet ki ilişkiler ("PlayerModel" gibi
+# string referanslar) çözülebilsin. Script main.py'dan geçmediği için elle import.
+import auth.models, players.models, games.models, matches.models  # noqa: F401
+
 ADMIN_USERNAME = "kuanta"
 ADMIN_EMAIL = "dorukhan.erdem@gmail.com"
 ADMIN_PASSWORD = "change_me"
