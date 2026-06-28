@@ -5,6 +5,9 @@ class Settings(BaseSettings):
     # .env dosyasından okur; tanımlı olmayan ekstra değişkenleri yok sayar
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
+    # Veritabanı bağlantısı (dev: sqlite, prod: postgresql)
+    DATABASE_URL: str = "sqlite:///./database.db"
+
     # JWT (kullanıcı auth)
     SECRET_KEY: str = "dev-insecure-change-me"
     ALGORITHM: str = "HS256"
