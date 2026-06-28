@@ -19,7 +19,7 @@ async def root():
 async def login(login_data: LoginRequest, db: DbSession):
     account = get_account_by_username(login_data.username, db)
     if not account:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Player not found")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Account not found")
     
     # Verify password
     if not verify_password(login_data.password, account.hashed_password):

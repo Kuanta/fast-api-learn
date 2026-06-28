@@ -17,6 +17,9 @@ def create_game(game_data:GameCreateData, db:Session):
     db.refresh(new_game)
     return new_game
 
+def get_all_games(db: Session):
+    return db.query(GameModel).all()
+
 def get_game_by_id(game_id:int, db: Session):
     return db.query(GameModel).filter(GameModel.id == game_id).first()
 

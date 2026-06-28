@@ -10,23 +10,31 @@ router = APIRouter(
 )
 
 @router.get("/")
-async def games_root():
-    return {"message":"Games API"}
+async def games_root(admin_account: CurrentAdminAccount, db: DbSession):
+    return services.get_all_games(db)
 
 @router.get("/lookup/{game_id}", response_model=GameResponseData)
-async def lookup_game(game_id: int, db: DbSession):
-    game = services.get_game_by_id(game_id)
+async def lookup_game(game_id: int, admin_account: CurrentAdminAccount, db: DbSession):
+    game = services.get_game_by_id(game_id,db)
+    if game is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Game not found")
+    return game
 
 @router.get("/lookup/code/{game_code}", response_model=GameResponseData)
-async def lookup_game(game_code: str, db: DbSession):
-    game = services.get_game_by_code(game_code)
+async def lookup_game(game_code: str, admin_account: CurrentAdminAccount, db: DbSession):
+    game = services.get_game_by_code(game_code,db)
+    if game is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Game not found")
+    return game
 
 @router.post("/create", status_code=status.HTTP_201_CREATED, response_model=GameResponseData)
 async def create_game(game_data: GameCreateData, admin_account: CurrentAdminAccount,db: DbSession):
-    new_game = services.create_game(game_data)
+    new_game = services.create_game(game_data, db)
+    if new_game is None:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Couldn't create game")
     return new_game
 
-@router.put("/update", status_code=status.HTTP_206_PARTIAL_CONTENT, response_model=GameResponseData)
+@router.put("/update", status_code=status.HTTP_200_OK, response_model=GameResponseData)
 async def update_game(update_data: GameUpdateData, admin_account: CurrentAdminAccount, db: DbSession):
     game = services.update_game(update_data.game_id, update_data, db)
     if game is None:
@@ -35,7 +43,7 @@ async def update_game(update_data: GameUpdateData, admin_account: CurrentAdminAc
 
 @router.delete("/delete/{game_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_game(game_id: int, admin_account: CurrentAdminAccount, db: DbSession):
-    game = services.get_game_by_id(game_id)
+    game = services.get_game_by_id(game_id, db)
 
     if game is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Game not found")

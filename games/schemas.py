@@ -11,7 +11,7 @@ class GameUpdateData(BaseModel):
     game_description: str | None = None
 
 class GameResponseData(BaseModel):
-    game_id: int
+    id: int
     game_code: str
     game_name: str
     game_description: str
