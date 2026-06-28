@@ -9,7 +9,6 @@ from games.routers import router as game_router
 
 
 app = FastAPI()
-Base.metadata.create_all(bind=engine)
 
 app.include_router(player_router)
 app.include_router(match_router)
