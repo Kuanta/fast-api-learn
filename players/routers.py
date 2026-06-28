@@ -11,6 +11,10 @@ router = APIRouter(
 )
 
 # GET REQUESTS
+@router.get("/")
+async def players_root(db: DbSession):
+    return {"message:":"Profiles API"}
+
 @router.get("/me", response_model=list[PlayerResponseModel])
 async def get_current_player(current_account: CurrentAccount, db: DbSession):
     return services.get_all_account_profiles(current_account.id, db)

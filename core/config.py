@@ -13,5 +13,6 @@ class Settings(BaseSettings):
     # Service auth (authoritative game server -> maç girişi)
     GAME_SERVER_API_KEY: str = "dev-insecure-change-me"
 
+    ADMIN_ROLE_LEVEL: int = 3
 
 settings = Settings()
