@@ -8,8 +8,7 @@ api_key_header = APIKeyHeader(name="X-API-Key")
 
 def verify_service_key(key: str = Security(api_key_header)):
     """
-    Authoritative game server'ı doğrular. Kullanıcı (JWT) değil, servis auth'u.
-    Geçerli API key olmadan maç girişi yapılamaz.
+    Authoritative game server authorization with api key
     """
     if key != settings.GAME_SERVER_API_KEY:
         raise HTTPException(

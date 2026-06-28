@@ -1,14 +1,16 @@
 from pydantic import BaseModel
 
-class MatchCreateData(BaseModel):
-    player1_id: int
-    player2_id: int
-    winner_id: int | None = None
-    loser_id: int | None = None
-    is_draw: bool = False
+class MatchParticipantData(BaseModel):
+    account_id: int
+    faction_id : int
 
-class MatchUpdateData(BaseModel):
-    match_id: int
-    winner_id: int | None = None
-    loser_id: int | None = None
-    is_draw: bool | None = None
+    model_config = {"from_attributes": True}
+
+class MatchData(BaseModel):
+    winner_faction: int | None = None
+    game_id: int
+    participants: list[MatchParticipantData]
+
+    model_config = {"from_attributes": True}
+
+

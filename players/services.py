@@ -46,6 +46,18 @@ def update_profile(account_id: int, game_id: int, player_data: PlayerUpdateData,
     else:
         return None
     
+def increase_win(account_id, game_id, db: Session):
+    profile = get_game_profile(game_id, account_id, db)
+    if profile is not None:
+        profile.wins += 1
+    return profile
+
+def increase_lose(account_id, game_id, db: Session):
+    profile = get_game_profile(game_id, account_id, db)
+    if profile is not None:
+        profile.loses += 1
+    return profile
+    
 def delete_profile(account_id: str, game_id: str, db: Session) -> PlayerModel | None:
     player = get_game_profile(game_id, account_id, db)
     if player is not None:
